@@ -1,9 +1,13 @@
+import dataloaders.Boards;
+import dataloaders.PropertyLoader;
+import dataloaders.ResourcesLoader;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import org.testng.annotations.BeforeClass;
@@ -20,20 +24,26 @@ public class Tests {
    public final String CARD_UNIQUE_ID = "5a27e722e2f04f3ab6924931";
    public final String BOARD_ID = "5a27e3b62fef5d3a74dca48a";
 
-
    private RequestSpecification requestSpec;
-   ResponseSpecification responseSpec;
+   private ResponseSpecification responseSpec;
+   private PropertyLoader commonData;
+   private ResourcesLoader resources;
+   private Boards boards;
 
    @BeforeClass
-   public void init() {
+   public void init(){
+      commonData = new PropertyLoader();
+      resources = new ResourcesLoader();
+
+      boards = new Boards();
       RequestSpecBuilder requestBuilder = new RequestSpecBuilder()
               .setContentType(ContentType.JSON)
-              .setBaseUri("https://api.trello.com/1/")
+              .setBaseUri(commonData.getBaseUrl())
               .log(LogDetail.URI).log(LogDetail.METHOD)
               .addFilter(new ResponseLoggingFilter(LogDetail.STATUS))
               .addFilter(new ResponseLoggingFilter(LogDetail.BODY))
-              .addQueryParam("key", "3445103a21ddca2619eaceb0e833d0db")
-              .addQueryParam("token", "a9b951262e529821308e7ecbc3e4b7cfb14a24fef5ea500a68c69d374009fcc0");
+              .addQueryParam("key", commonData.getApiKey())
+              .addQueryParam("token", commonData.getToken());
       requestSpec = requestBuilder.build();
 
       ResponseSpecBuilder responseBuilder = new ResponseSpecBuilder()
@@ -45,14 +55,14 @@ public class Tests {
    }
 
    @Test
-   public void createNewBoardTest() {
+   public void createNewBoardTest(){
       String boardName = "Lorem ipsum board " + random(12, true, true);
       String body = "{\"name\":\"" + boardName + "\"}";
       given()
               .spec(requestSpec)
               .body(body)
       .when()
-              .post("/boards")
+              .post(boards.boards)
       .then()
               .spec(responseSpec);
    }
@@ -60,12 +70,13 @@ public class Tests {
    @Test
    public void getBoardById() {
 
-      given()
+      Response response = given()
             .spec(requestSpec)
             .pathParam("board_id", BOARD_ID)
      .when()
-            .get("/boards/{board_id}")
-     .then()
+            .get(boards.boards_id);
+
+     response.then()
             .spec(responseSpec)
             .body("id", equalTo(BOARD_ID));
 }
@@ -94,7 +105,6 @@ public class Tests {
               .spec(responseSpec)
               .body("name", equalTo("Lorem ipsum dolor sit amet"));
    }
-
 
    @Test
    public void postNewCommentToCard() {
