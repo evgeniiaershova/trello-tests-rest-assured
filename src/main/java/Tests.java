@@ -1,23 +1,27 @@
-import dataloaders.Boards;
-import dataloaders.PropertyLoader;
-import dataloaders.ResourcesLoader;
+import dataloaders.*;
 import io.restassured.RestAssured;
-import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.builder.ResponseSpecBuilder;
-import io.restassured.filter.log.LogDetail;
-import io.restassured.filter.log.ResponseLoggingFilter;
+import io.restassured.builder.*;
+import io.restassured.config.LogConfig;
+import io.restassured.config.RestAssuredConfig;
+import io.restassured.filter.log.*;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
-import io.restassured.specification.ResponseSpecification;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import io.restassured.specification.*;
+import org.apache.commons.io.output.WriterOutputStream;
+import org.apache.log4j.Layout;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.WriterAppender;
+import org.testng.annotations.*;
 
+import java.io.File;
+import java.io.PrintStream;
+import java.io.StringWriter;
+
+import static io.restassured.RestAssured.config;
 import static io.restassured.RestAssured.given;
 import static org.apache.commons.lang3.RandomStringUtils.random;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 public class Tests {
@@ -29,6 +33,11 @@ public class Tests {
    private PropertyLoader commonData;
    private ResourcesLoader resources;
    private Boards boards;
+   final static Logger logger = Logger.getLogger("Logger ");
+   final StringWriter writer = new StringWriter();
+   final PrintStream printStream = new PrintStream(new WriterOutputStream(writer), true);
+   Layout layout = new PatternLayout();
+   WriterAppender writerAppender = new WriterAppender(layout, printStream);
 
    @BeforeClass
    public void init(){
@@ -36,22 +45,27 @@ public class Tests {
       resources = new ResourcesLoader();
 
       boards = new Boards();
-      RequestSpecBuilder requestBuilder = new RequestSpecBuilder()
+
+      requestSpec = new RequestSpecBuilder()
               .setContentType(ContentType.JSON)
               .setBaseUri(commonData.getBaseUrl())
-              .log(LogDetail.URI).log(LogDetail.METHOD)
+              .addQueryParam("key", commonData.getApiKey())
+              .addQueryParam("token", commonData.getToken())
               .addFilter(new ResponseLoggingFilter(LogDetail.STATUS))
               .addFilter(new ResponseLoggingFilter(LogDetail.BODY))
-              .addQueryParam("key", commonData.getApiKey())
-              .addQueryParam("token", commonData.getToken());
-      requestSpec = requestBuilder.build();
+              .addFilter(new RequestLoggingFilter(LogDetail.URI))
+              .addFilter(new RequestLoggingFilter(LogDetail.METHOD))
+              .build();
 
-      ResponseSpecBuilder responseBuilder = new ResponseSpecBuilder()
+      responseSpec = new ResponseSpecBuilder()
               .expectStatusCode(200)
-              .expectContentType(ContentType.JSON);
-      responseSpec = responseBuilder.build();
+              .expectContentType(ContentType.JSON)
+              .build();
 
-      RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+//      RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+//      RestAssured.config = config().logConfig(new LogConfig(printStream, true));
+      logger.addAppender(writerAppender);
+
    }
 
    @Test
@@ -62,7 +76,7 @@ public class Tests {
               .spec(requestSpec)
               .body(body)
       .when()
-              .post(boards.boards)
+              .post(Boards.boards)
       .then()
               .spec(responseSpec);
    }

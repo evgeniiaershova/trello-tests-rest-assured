@@ -2,8 +2,8 @@ package dataloaders;
 
 public class Boards {
 
-    public String boards = "/boards";
-    public String boards_id ="/boards/{id}";
+    public static String boards = "/boards";
+    public static String boards_id ="/boards/{id}";
 
 
 
