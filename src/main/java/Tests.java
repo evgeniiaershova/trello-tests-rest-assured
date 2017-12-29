@@ -1,24 +1,22 @@
 import dataloaders.*;
 import io.restassured.RestAssured;
 import io.restassured.builder.*;
-import io.restassured.config.LogConfig;
 import io.restassured.config.RestAssuredConfig;
+import io.restassured.filter.Filter;
 import io.restassured.filter.log.*;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.*;
-import org.apache.commons.io.output.WriterOutputStream;
-import org.apache.log4j.Layout;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.WriterAppender;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.annotations.*;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
-import static io.restassured.RestAssured.config;
 import static io.restassured.RestAssured.given;
 import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.hamcrest.Matchers.*;
@@ -33,16 +31,23 @@ public class Tests {
    private PropertyLoader commonData;
    private ResourcesLoader resources;
    private Boards boards;
-   final static Logger logger = Logger.getLogger("Logger ");
-   final StringWriter writer = new StringWriter();
-   final PrintStream printStream = new PrintStream(new WriterOutputStream(writer), true);
-   Layout layout = new PatternLayout();
-   WriterAppender writerAppender = new WriterAppender(layout, printStream);
+   private static final Logger logger = LogManager.getLogger(Tests.class);
+
+   private ByteArrayOutputStream request = new ByteArrayOutputStream();
+   private ByteArrayOutputStream response = new ByteArrayOutputStream();
+
+   private PrintStream requestVar = new PrintStream(request, true);
+   private PrintStream responseVar = new PrintStream(response, true);
 
    @BeforeClass
    public void init(){
       commonData = new PropertyLoader();
       resources = new ResourcesLoader();
+
+      RequestLoggingFilter requestLogUri = new RequestLoggingFilter(LogDetail.URI, true, requestVar);
+      RequestLoggingFilter requestLogMethod = new RequestLoggingFilter (LogDetail.METHOD, true, requestVar);
+      ResponseLoggingFilter responseLogBody = new ResponseLoggingFilter(LogDetail.BODY, true, responseVar);
+      ResponseLoggingFilter responseLogUri = new ResponseLoggingFilter(LogDetail.STATUS, true, responseVar);
 
       boards = new Boards();
 
@@ -51,10 +56,10 @@ public class Tests {
               .setBaseUri(commonData.getBaseUrl())
               .addQueryParam("key", commonData.getApiKey())
               .addQueryParam("token", commonData.getToken())
-              .addFilter(new ResponseLoggingFilter(LogDetail.STATUS))
-              .addFilter(new ResponseLoggingFilter(LogDetail.BODY))
-              .addFilter(new RequestLoggingFilter(LogDetail.URI))
-              .addFilter(new RequestLoggingFilter(LogDetail.METHOD))
+              .addFilter(requestLogUri)
+              .addFilter(requestLogMethod)
+              .addFilter(responseLogBody)
+              .addFilter(responseLogUri)
               .build();
 
       responseSpec = new ResponseSpecBuilder()
@@ -62,23 +67,21 @@ public class Tests {
               .expectContentType(ContentType.JSON)
               .build();
 
-//      RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-//      RestAssured.config = config().logConfig(new LogConfig(printStream, true));
-      logger.addAppender(writerAppender);
-
-   }
+      RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+      }
 
    @Test
    public void createNewBoardTest(){
       String boardName = "Lorem ipsum board " + random(12, true, true);
-      String body = "{\"name\":\"" + boardName + "\"}";
+//      String body = "{\"name\":\"" + boardName + "\"}";
+      String body = "0";
       given()
-              .spec(requestSpec)
-              .body(body)
+              .spec(requestSpec.body(body))
       .when()
               .post(Boards.boards)
       .then()
               .spec(responseSpec);
+
    }
 
    @Test
@@ -86,13 +89,14 @@ public class Tests {
 
       Response response = given()
             .spec(requestSpec)
-            .pathParam("board_id", BOARD_ID)
+            .pathParam("id", BOARD_ID)
      .when()
             .get(boards.boards_id);
 
      response.then()
             .spec(responseSpec)
             .body("id", equalTo(BOARD_ID));
+
 }
 
    @Test
