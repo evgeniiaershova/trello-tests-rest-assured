@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite thread-count="3" guice-stage="DEVELOPMENT" verbose="0" name="Failed suite [Trello tests]" parallel="methods">
+  <test name="Test name(failed)" parallel="methods">
+    <classes>
+      <class name="Tests">
+        <methods>
+          <include name="createNewBoardTest"/>
+          <include name="init"/>
+        </methods>
+      </class> <!-- Tests -->
+    </classes>
+  </test> <!-- Test name(failed) -->
+</suite> <!-- Failed suite [Trello tests] -->

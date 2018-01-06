@@ -44,10 +44,10 @@ public class Tests {
       commonData = new PropertyLoader();
       resources = new ResourcesLoader();
 
-      RequestLoggingFilter requestLogUri = new RequestLoggingFilter(LogDetail.URI, true, requestVar);
-      RequestLoggingFilter requestLogMethod = new RequestLoggingFilter (LogDetail.METHOD, true, requestVar);
-      ResponseLoggingFilter responseLogBody = new ResponseLoggingFilter(LogDetail.BODY, true, responseVar);
-      ResponseLoggingFilter responseLogUri = new ResponseLoggingFilter(LogDetail.STATUS, true, responseVar);
+      RequestLoggingFilter requestLogUri = new RequestLoggingFilter(LogDetail.URI);
+      RequestLoggingFilter requestLogMethod = new RequestLoggingFilter (LogDetail.ALL);
+      ResponseLoggingFilter responseLogBody = new ResponseLoggingFilter(LogDetail.ALL);
+      ResponseLoggingFilter responseLogUri = new ResponseLoggingFilter(LogDetail.STATUS);
 
       boards = new Boards();
 
@@ -73,8 +73,7 @@ public class Tests {
    @Test
    public void createNewBoardTest(){
       String boardName = "Lorem ipsum board " + random(12, true, true);
-//      String body = "{\"name\":\"" + boardName + "\"}";
-      String body = "0";
+      String body = "{\"name\":\"" + boardName + "\"}";
       given()
               .spec(requestSpec.body(body))
       .when()

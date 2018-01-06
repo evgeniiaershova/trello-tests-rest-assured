@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>TestNG Report</title><style type="text/css">table {margin-bottom:10px;border-collapse:collapse;empty-cells:show}th,td {border:1px solid #009;padding:.25em .5em}th {vertical-align:bottom}td {vertical-align:top}table a {font-weight:bold}.stripe td {background-color: #E6EBF9}.num {text-align:right}.passedodd td {background-color: #3F3}.passedeven td {background-color: #0A0}.skippedodd td {background-color: #DDD}.skippedeven td {background-color: #CCC}.failedodd td,.attn {background-color: #F33}.failedeven td,.stripe .attn {background-color: #D00}.stacktrace {white-space:pre;font-family:monospace}.totop {font-size:85%;text-align:center;border-bottom:2px solid #000}</style></head><body><table><tr><th>Test</th><th># Passed</th><th># Skipped</th><th># Failed</th><th>Time (ms)</th><th>Included Groups</th><th>Excluded Groups</th></tr><tr><th colspan="7">Trello tests</th></tr><tr><td><a href="#t0">Test name</a></td><td class="num">2</td><td class="num">0</td><td class="num attn">1</td><td class="num">2 814</td><td></td><td></td></tr></table><table id='summary'><thead><tr><th>Class</th><th>Method</th><th>Start</th><th>Time (ms)</th></tr></thead><tbody><tr><th colspan="4">Trello tests</th></tr></tbody><tbody id="t0"><tr><th colspan="4">Test name &#8212; failed</th></tr><tr class="failedeven"><td rowspan="1">Tests</td><td><a href="#m0">createNewBoardTest</a></td><td rowspan="1">1515247850147</td><td rowspan="1">1510</td></tr><tr><th colspan="4">Test name &#8212; passed</th></tr><tr class="passedeven"><td rowspan="2">Tests</td><td><a href="#m1">getBoardById</a></td><td rowspan="1">1515247850147</td><td rowspan="1">1892</td></tr><tr class="passedeven"><td><a href="#m2">getBoardCardsList</a></td><td rowspan="1">1515247850147</td><td rowspan="1">1892</td></tr></tbody></table><h2>Test name</h2><h3 id="m0">Tests#createNewBoardTest</h3><table class="result"><tr><th>Exception</th></tr><tr><td><div class="stacktrace">java.lang.AssertionError: 2 expectations failed.
+Expected status code &lt;200&gt; but was &lt;400&gt;.
+
+Expected content-type &quot;JSON&quot; doesn&apos;t match actual content-type &quot;text/plain; charset=utf-8&quot;.
+
+	at org.codehaus.groovy.runtime.callsite.ConstructorSite$ConstructorSiteNoUnwrap.callConstructor(ConstructorSite.java:84)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallConstructor(CallSiteArray.java:60)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callConstructor(AbstractCallSite.java:235)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callConstructor(AbstractCallSite.java:247)
+	at io.restassured.internal.ResponseSpecificationImpl$HamcrestAssertionClosure.validate(ResponseSpecificationImpl.groovy:471)
+	at io.restassured.internal.ResponseSpecificationImpl$HamcrestAssertionClosure$validate$3.call(Unknown Source)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:48)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:113)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:125)
+	at io.restassured.internal.ResponseSpecificationImpl.validate(ResponseSpecificationImpl.groovy:88)
+	at io.restassured.internal.ValidatableResponseOptionsImpl.specification(ValidatableResponseOptionsImpl.java:311)
+	at io.restassured.internal.ValidatableResponseOptionsImpl.spec(ValidatableResponseOptionsImpl.java:292)
+	at Tests.createNewBoardTest(Tests.java:83)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+... Removed 16 stack frames</div></td></tr></table><p class="totop"><a href="#summary">back to summary</a></p><h3 id="m1">Tests#getBoardById</h3><table class="result"></table><p class="totop"><a href="#summary">back to summary</a></p><h3 id="m2">Tests#getBoardCardsList</h3><table class="result"></table><p class="totop"><a href="#summary">back to summary</a></p></body></html>
