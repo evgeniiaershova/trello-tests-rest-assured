@@ -2,13 +2,14 @@ pipeline {
     agent any
 
     parameters {
-        booleanParam(defaultValue: true, description: '', name: 'userFlag')
+        string(defaultValue: "api-tests-suite.xml", description: 'What environment?', name: 'suite')
     }
 
     stages {
-        stage("foo") {
+        stage("Build") {
             steps {
-                echo "flag: ${params.userFlag}"
+                bat "mvn --version"
+                bat "mvn clean install -DsuiteXmlFile=${params.suite}"
             }
         }
     }
