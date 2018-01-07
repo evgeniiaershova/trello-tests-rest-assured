@@ -8,7 +8,7 @@ pipeline {
     stage('build') {
       steps {
         bat 'mvn --version'
-        bat 'mvn clean install -DsuiteXmlFile=${parameters.suite}'
+        bat 'mvn clean install -DsuiteXmlFile=api-tests-suite.xml'
       }
     }
   }
