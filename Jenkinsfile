@@ -1,7 +1,15 @@
-properties([parameters([string(defaultValue: "api-tests-suite.xml", description: 'no description', name: 'SUITE')])])
-node {
-    stage('Build') {
-        bat 'mvn --version'
-        bat 'mvn clean install -DsuiteXmlFile=${params.SUITE}'
+pipeline {
+    agent any
+
+    parameters {
+        booleanParam(defaultValue: true, description: '', name: 'userFlag')
+    }
+
+    stages {
+        stage("foo") {
+            steps {
+                echo "flag: ${params.userFlag}"
+            }
+        }
     }
 }
