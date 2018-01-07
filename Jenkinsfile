@@ -1,14 +1,15 @@
 pipeline {
   agent any
 
-  parameters {
-          choice(choices: 'api-tests-suite.xml', description: 'suite name', name: 'suite')
-  }
+   parameters {
+          string(name: 'suite', defaultValue: 'api-tests-suite.xml', description: 'no description')
+   }
+
   stages {
     stage('build') {
       steps {
         bat 'mvn --version'
-        bat 'mvn clean install -DsuiteXmlFile=api-tests-suite.xml'
+        bat 'mvn clean install -DsuiteXmlFile=${params.suite}'
       }
     }
   }
