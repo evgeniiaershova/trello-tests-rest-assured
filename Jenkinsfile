@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     parameters {
-        choice(choices: 'api-tests-suite.xml\gui-tests-suite.xml', description: 'What environment?', name: 'suite')
+        choice(choices: "api-tests-suite.xml\ngui-tests-suite.xml", description: 'What environment?', name: 'suite')
     }
 
     stages {
