@@ -13,7 +13,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'mvn --version'
-                sh 'mvn clean install -DsuiteXmlFile=${params.suite} -Dbrowser=${params.browser}'
+                sh "mvn clean install -DsuiteXmlFile=${params.suite} -Dbrowser=${params.browser}"
             }
         }
     }
