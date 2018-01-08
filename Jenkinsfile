@@ -9,8 +9,8 @@ pipeline {
     stages {
         stage("Build") {
             steps {
-                bat "mvn --version"
-                bat "mvn clean install -DsuiteXmlFile=${params.suite} -Dbrowser=${params.browser}"
+                sh "mvn --version"
+                sh "mvn clean install -DsuiteXmlFile=${params.suite} -Dbrowser=${params.browser}"
             }
         }
     }
