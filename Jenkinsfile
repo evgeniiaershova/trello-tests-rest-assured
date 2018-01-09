@@ -1,5 +1,9 @@
 pipeline {
     agent none
+    parameters {
+        choice(choices: 'api-tests-suite.xml\ngui-tests-suite.xml', description: 'What environment?', name: 'suite')
+        choice(choices: 'chrome\nfirefox', description: 'Browser', name: 'browser')
+    }
     stages {
         stage('Prepare images') {
             agent {
@@ -8,10 +12,6 @@ pipeline {
                     args '-v /root/.m2:/root/.m2'
                 }
             }
-        }
-        parameters {
-            choice(choices: 'api-tests-suite.xml\ngui-tests-suite.xml', description: 'What environment?', name: 'suite')
-            choice(choices: 'chrome\nfirefox', description: 'Browser', name: 'browser')
         }
         stage('Build') {
             steps {
