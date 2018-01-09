@@ -1,6 +1,8 @@
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterClass;
@@ -28,10 +30,12 @@ public class SeleniumTests {
         String browser = System.getProperty("browser");
         if (browser.equals("chrome")) {
             WebDriverManager.chromedriver().setup();
+            driver = new ChromeDriver();
 //            driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), chromeCapabilities);
         }
         if (browser.equals("firefox")) {
             WebDriverManager.firefoxdriver().setup();
+            driver = new FirefoxDriver();
 //            driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), firefoxCapabilities);
         }
     }
