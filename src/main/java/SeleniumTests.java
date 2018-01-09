@@ -17,12 +17,11 @@ import static org.hamcrest.Matchers.containsString;
 
 
 public class SeleniumTests {
-/*
     RemoteWebDriver driver;
     Capabilities chromeCapabilities = DesiredCapabilities.chrome();
-    Capabilities firefoxCapabilities = DesiredCapabilities.firefox();*/
+    Capabilities firefoxCapabilities = DesiredCapabilities.firefox();
 
-    WebDriver driver;
+//    WebDriver driver;
 
 
     @BeforeClass
@@ -30,13 +29,13 @@ public class SeleniumTests {
         String browser = System.getProperty("browser");
         if (browser.equals("chrome")) {
             WebDriverManager.chromedriver().setup();
-            driver = new ChromeDriver();
-//            driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), chromeCapabilities);
+//            driver = new ChromeDriver();
+            driver = new RemoteWebDriver(new URL("http://localhost:32772/wd/hub"), chromeCapabilities);
         }
         if (browser.equals("firefox")) {
             WebDriverManager.firefoxdriver().setup();
-            driver = new FirefoxDriver();
-//            driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), firefoxCapabilities);
+//            driver = new FirefoxDriver();
+            driver = new RemoteWebDriver(new URL("http://localhost:32772/wd/hub"), firefoxCapabilities);
         }
     }
 
