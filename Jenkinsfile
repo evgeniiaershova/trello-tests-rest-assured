@@ -3,8 +3,8 @@ pipeline {
         docker {
             image 'maven:3-alpine'
             args '-v /root/.m2:/root/.m2'
-            image 'selenium/hub:3.3.1'
-            args '-p 4444:4444 --name selenium-hub selenium/hub'
+            image 'selenium/hub'
+            args "-p 4444:4444 --name selenium-hub selenium/hub"
         }
     }
     parameters {
