@@ -30,12 +30,12 @@ public class SeleniumTests {
         if (browser.equals("chrome")) {
             WebDriverManager.chromedriver().setup();
 //            driver = new ChromeDriver();
-            driver = new RemoteWebDriver(new URL("http://127.0.0.1:32772/wd/hub"), chromeCapabilities);
+            driver = new RemoteWebDriver(new URL("http://localhost:32772/wd/hub"), chromeCapabilities);
         }
         if (browser.equals("firefox")) {
             WebDriverManager.firefoxdriver().setup();
 //            driver = new FirefoxDriver();
-            driver = new RemoteWebDriver(new URL("http://127.0.0.1:32772/wd/hub"), firefoxCapabilities);
+            driver = new RemoteWebDriver(new URL("http://localhost:32772/wd/hub"), firefoxCapabilities);
         }
     }
 

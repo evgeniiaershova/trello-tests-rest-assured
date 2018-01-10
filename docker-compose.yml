@@ -1,18 +1,37 @@
-selenium-hub:
+version: "2"
+services:
+ jenkins:
+   image: jenkinsci/blueocean
+   container_name: jenkins
+   restart: always
+   ports:
+     - 8080:8080
+   volumes:
+   - jenkins-data:/var/jenkins_home
+   - /var/run/docker.sock:/var/run/docker.sock
+   - jenkins-home:/home
+   links:
+   - selenium-hub:hub
+
+   volumes:
+       jenkins-data:
+           external: true
+
+ selenium-hub:
   image: selenium/hub
   ports:
-  - 4446:4444
+  - 32772:4444
 
-chrome:
+ chrome:
   image: selenium/node-chrome-debug
   ports:
-  - 4577
+  - 4577 
   links:
   - selenium-hub:hub
 
-firefox:
+ firefox:
   image: selenium/node-firefox-debug
   ports:
-  - 4578
+  - 4578 
   links:
-  - selenium-hub:hub
+    - selenium-hub:hub
