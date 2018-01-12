@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { docker 'maven:3.3.3' }
 
     parameters {
         choice(choices: "api-tests-suite.xml\ngui-tests-suite.xml", description: 'What environment?', name: 'suite')
