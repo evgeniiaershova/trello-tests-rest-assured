@@ -13,9 +13,6 @@ public class PropertyLoader {
     public PropertyLoader() {
         this.propertiesFileName = "common-service.properties";
     }
-    public PropertyLoader(String propertiesFileName) {
-        this.propertiesFileName = propertiesFileName;
-    }
 
     public String getBaseUrl(){
         return load("baseUrl");

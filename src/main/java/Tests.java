@@ -1,22 +1,10 @@
 import dataloaders.*;
-import io.restassured.RestAssured;
 import io.restassured.builder.*;
-import io.restassured.config.RestAssuredConfig;
-import io.restassured.filter.Filter;
 import io.restassured.filter.log.*;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.*;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.testng.annotations.*;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import static io.restassured.RestAssured.given;
 import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.hamcrest.Matchers.*;
@@ -29,27 +17,15 @@ public class Tests {
    private RequestSpecification requestSpec;
    private ResponseSpecification responseSpec;
    private PropertyLoader commonData;
-   private ResourcesLoader resources;
-   private Boards boards;
-   private static final Logger logger = LogManager.getLogger(Tests.class);
-
-   private ByteArrayOutputStream request = new ByteArrayOutputStream();
-   private ByteArrayOutputStream response = new ByteArrayOutputStream();
-
-   private PrintStream requestVar = new PrintStream(request, true);
-   private PrintStream responseVar = new PrintStream(response, true);
 
    @BeforeClass
    public void init(){
       commonData = new PropertyLoader();
-      resources = new ResourcesLoader();
 
       RequestLoggingFilter requestLogUri = new RequestLoggingFilter(LogDetail.URI);
-      RequestLoggingFilter requestLogMethod = new RequestLoggingFilter (LogDetail.ALL);
-      ResponseLoggingFilter responseLogBody = new ResponseLoggingFilter(LogDetail.ALL);
+      RequestLoggingFilter requestLogMethod = new RequestLoggingFilter (LogDetail.PARAMS);
+      ResponseLoggingFilter responseLogBody = new ResponseLoggingFilter(LogDetail.BODY);
       ResponseLoggingFilter responseLogUri = new ResponseLoggingFilter(LogDetail.STATUS);
-
-      boards = new Boards();
 
       requestSpec = new RequestSpecBuilder()
               .setContentType(ContentType.JSON)
@@ -66,8 +42,6 @@ public class Tests {
               .expectStatusCode(200)
               .expectContentType(ContentType.JSON)
               .build();
-
-      RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
       }
 
    @Test
@@ -77,10 +51,10 @@ public class Tests {
       given()
               .spec(requestSpec.body(body))
       .when()
-              .post(Boards.boards)
+              .post("/boards")
+
       .then()
               .spec(responseSpec);
-
    }
 
    @Test
@@ -90,7 +64,7 @@ public class Tests {
             .spec(requestSpec)
             .pathParam("id", BOARD_ID)
      .when()
-            .get(boards.boards_id);
+            .get("/boards/{id}");
 
      response.then()
             .spec(responseSpec)

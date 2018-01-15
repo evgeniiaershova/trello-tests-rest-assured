@@ -4,7 +4,7 @@
 <suite name="Trello tests" verbose="10" parallel="methods" thread-count="1">
     <test name="Test name">
         <classes>
-            <class name="SeleniumTests">
+            <class name="trash.SeleniumTests">
                 <methods>
                     <include name="getGoogle"/>
                 </methods>
