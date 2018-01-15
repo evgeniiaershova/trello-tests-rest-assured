@@ -5,6 +5,8 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.*;
 import org.testng.annotations.*;
+import dataloaders.GetCardByUniqueId;
+
 import static io.restassured.RestAssured.given;
 import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.hamcrest.Matchers.*;
@@ -126,12 +128,16 @@ public class Tests {
 
    @Test
    public void getCardByUniqueId() {
-      given()
-              .spec(requestSpec)
+
+//    GetCardByUniqueId cardByUniqueId = new GetCardByUniqueId();
+
+       GetCardByUniqueId
+              .given
+              .log().all()
               .queryParam("fields", "url", "shortUrl")
               .pathParam("card_id", CARD_UNIQUE_ID)
          .when()
-              .get("/cards/{card_id}")
+              .get(GetCardByUniqueId.resource)
          .then()
               .spec(responseSpec)
               .body("url", containsString("https://trello.com/c/SSFPAlkB/1-lorem-ipsum-dolor-sit-amet"))
