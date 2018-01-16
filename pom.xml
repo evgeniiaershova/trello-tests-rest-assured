@@ -7,7 +7,10 @@
     <groupId>trello-tests-rest-assured</groupId>
     <artifactId>trello-tests-rest-assured</artifactId>
     <version>1.0-SNAPSHOT</version>
-
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>io.rest-assured</groupId>
@@ -59,6 +62,11 @@
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
             <version>2.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.epam.jdi</groupId>
+            <artifactId>jdi-commons</artifactId>
+            <version>1.1.1</version>
         </dependency>
     </dependencies>
     <build>
