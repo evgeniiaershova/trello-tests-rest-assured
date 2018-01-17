@@ -1,9 +1,13 @@
-import annotations.*;
+package dataloaders.http.requests;
+
+import dataloaders.http.annotations.Resource;
+import dataloaders.http.annotations.*;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
 import static com.epam.commons.LinqUtils.where;
+import static dataloaders.http.ExceptionHandler.exception;
 import static java.lang.reflect.Modifier.isStatic;
 
 /**
@@ -25,21 +29,20 @@ public class ServiceInit {
         }
         return getService(c);
     }
-
     private static Object service;
-
     private static <T> T getService(Class<T> c) {
         if (service != null) return (T) service;
         try {
             return (T) (service = c.newInstance());
-        } catch (IllegalAccessException | InstantiationException ex) {
-            throw exception("Can't instantiate class %s, Service class should have empty constructor",
-                    c.getSimpleName());
-        }
+        } catch (IllegalAccessException|InstantiationException ex) {
+            throw exception(
+                "Can't instantiate class %s, Service class should have empty constructor",
+                    c.getSimpleName()); }
     }
     private static <T> RestMethod getRestMethod(Field field, Class<T> c) {
         MethodData mtData = getMethodData(field);
-        RestMethod method = new RestMethod(getDomain(c), mtData.getResource());
+        String url = getUrlFromDomain(getDomain(c), mtData.getUrl(), field.getName(), c.getSimpleName());
+        RestMethod method = new RestMethod(mtData.getType(), getDomain(c), mtData.getUrl());
         if (field.isAnnotationPresent(ContentType.class))
             method.setContentType(field.getAnnotation(ContentType.class).value());
         if (field.isAnnotationPresent(Header.class))
@@ -48,10 +51,10 @@ public class ServiceInit {
             method.addHeaders(field.getAnnotation(Headers.class).value());
         /* Case for class annotations*/
         if (c.isAnnotationPresent(QueryParameter.class))
-            method.addQueryParameters(c.getAnnotation(QueryParameter.class));
+             method.addQueryParameters(c.getAnnotation(QueryParameter.class));
         if (c.isAnnotationPresent(QueryParameters.class))
             method.addQueryParameters(c.getAnnotation(QueryParameters.class).value());
-        /* Case for method annotations*/
+//         Case for method annotations
         if (field.isAnnotationPresent(QueryParameter.class))
             method.addQueryParameters(field.getAnnotation(QueryParameter.class));
         if (field.isAnnotationPresent(QueryParameters.class))
@@ -60,17 +63,39 @@ public class ServiceInit {
     }
 
     private static MethodData getMethodData(Field method) {
-        return new MethodData(method.getAnnotation(Method.class).value());
+        if (method.isAnnotationPresent(Resource.class)){
+            return new MethodData(method.getAnnotation(Resource.class).value());
+        }
+        if (method.isAnnotationPresent(GET.class))
+            return new MethodData(method.getAnnotation(GET.class).value(), RestMethodTypes.GET);
+        if (method.isAnnotationPresent(POST.class))
+            return new MethodData(method.getAnnotation(POST.class).value(), RestMethodTypes.POST);
+        if (method.isAnnotationPresent(PUT.class))
+            return new MethodData(method.getAnnotation(PUT.class).value(), RestMethodTypes.PUT);
+        if (method.isAnnotationPresent(DELETE.class))
+            return new MethodData(method.getAnnotation(DELETE.class).value(), RestMethodTypes.DELETE);
+        if (method.isAnnotationPresent(PATCH.class))
+            return new MethodData(method.getAnnotation(PATCH.class).value(), RestMethodTypes.PATCH);
+        return new MethodData(null, RestMethodTypes.GET);
     }
+    private static String getUrlFromDomain(String domain, String uri, String methodName, String className) {
+        if (uri == null)
+            return null;
+        if (uri.contains("://"))
+            return uri;
+        if (domain == null)
+            throw exception(
+            "Can't instantiate method '%s' for service '%s'. " +
+                    "Domain undefined and method url not contains '://'",
+                    methodName, className);
+        return domain.replaceAll("/*$", "") + "/" + uri.replaceAll("^/*", "");
+    }
+
 
 
     private static <T> String getDomain(Class<T> c) {
         return c.isAnnotationPresent(ServiceDomain.class)
                 ? c.getAnnotation(ServiceDomain.class).value()
                 : null;
-    }
-
-    public static RuntimeException exception(String message, Object... args) {
-        return new RuntimeException(String.format(message, args));
     }
 }

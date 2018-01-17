@@ -1,16 +1,18 @@
-import dataloaders.*;
-import io.restassured.builder.*;
-import io.restassured.filter.log.*;
+import dataloaders.PropertyLoader;
+import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
-import io.restassured.specification.*;
-import org.testng.annotations.*;
-import dataloaders.GetCardByUniqueId;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import trash.TrelloClient;
 
-import static io.restassured.RestAssured.given;
-import static org.apache.commons.lang3.RandomStringUtils.random;
+import static dataloaders.http.requests.ServiceInit.init;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static trash.TrelloClient.getAllMemberBoards;
+import static trash.TrelloClient.getCard;
+
 
 public class Tests {
    public final String CARD_UNIQUE_ID = "5a27e722e2f04f3ab6924931";
@@ -20,9 +22,12 @@ public class Tests {
    private ResponseSpecification responseSpec;
    private PropertyLoader commonData;
 
+
    @BeforeClass
-   public void init(){
-      commonData = new PropertyLoader();
+   public void initClass(){
+      init(TrelloClient.class);
+
+   /*   commonData = new PropertyLoader();
 
       RequestLoggingFilter requestLogUri = new RequestLoggingFilter(LogDetail.URI);
       RequestLoggingFilter requestLogMethod = new RequestLoggingFilter (LogDetail.PARAMS);
@@ -38,7 +43,7 @@ public class Tests {
               .addFilter(requestLogMethod)
               .addFilter(responseLogBody)
               .addFilter(responseLogUri)
-              .build();
+              .build();*/
 
       responseSpec = new ResponseSpecBuilder()
               .expectStatusCode(200)
@@ -46,7 +51,7 @@ public class Tests {
               .build();
       }
 
-   @Test
+   /*@Test
    public void createNewBoardTest(){
       String boardName = "Lorem ipsum board " + random(12, true, true);
       String body = "{\"name\":\"" + boardName + "\"}";
@@ -113,31 +118,30 @@ public class Tests {
               .spec(responseSpec)
               .body("data.text", containsString(newComment));
    }
-
+*/
    @Test
    public void getAllUserBoards() {
-      given()
-              .spec(requestSpec)
+      getAllMemberBoards
+              .spec
+              .log().all()
               .pathParam("user_name", "jdiframwork")
        .when()
-              .get("/members/{user_name}/boards")
+              .get(getAllMemberBoards.resource)
        .then()
               .spec(responseSpec)
               .body("name.size()", greaterThan(4));
    }
-
    @Test
    public void getCardByUniqueId() {
 
-//    GetCardByUniqueId cardByUniqueId = new GetCardByUniqueId();
 
-       GetCardByUniqueId
-              .given
+       getCard
+              .spec
               .log().all()
               .queryParam("fields", "url", "shortUrl")
               .pathParam("card_id", CARD_UNIQUE_ID)
          .when()
-              .get(GetCardByUniqueId.resource)
+              .get(getCard.resource)
          .then()
               .spec(responseSpec)
               .body("url", containsString("https://trello.com/c/SSFPAlkB/1-lorem-ipsum-dolor-sit-amet"))

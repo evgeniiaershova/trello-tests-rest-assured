@@ -1,5 +1,4 @@
-package annotations;
-
+package dataloaders.http.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -8,6 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.FIELD})
-public @interface Resource {
+public @interface QueryParameter {
+    String name();
     String value();
 }

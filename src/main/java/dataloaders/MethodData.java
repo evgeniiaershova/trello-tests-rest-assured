@@ -1,3 +1,5 @@
+package dataloaders;
+
 import com.epam.commons.DataClass;
 
 public class MethodData extends DataClass {
