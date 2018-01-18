@@ -4,7 +4,7 @@
 <suite name="Trello tests" verbose="10" parallel="methods" thread-count="3">
     <test name="Test name">
         <classes>
-            <class name="Tests">
+            <class name="TrelloTests">
                 <methods>
                     <include name="createNewBoardTest"/>
                     <include name="getBoardById"/>
