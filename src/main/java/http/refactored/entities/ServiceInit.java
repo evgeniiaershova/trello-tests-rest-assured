@@ -1,12 +1,12 @@
 package http.refactored.entities;
 
-import http.refactored.ExceptionHandler;
 import http.refactored.annotations.*;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
 import static com.epam.commons.LinqUtils.where;
+import static http.refactored.ExceptionHandler.exception;
 import static java.lang.reflect.Modifier.isStatic;
 
 public class ServiceInit {
@@ -21,7 +21,7 @@ public class ServiceInit {
                 if (!isStatic(method.getModifiers()) && method.get(getService(c)) == null)
                     method.set(getService(c), getRestMethod(method, c));
             } catch (IllegalAccessException ex) {
-                throw ExceptionHandler.exception("Can't init method %s for class %s", method.getName(), c.getName()); }
+                throw exception("Can't init method %s for class %s", method.getName(), c.getName()); }
         }
         return getService(c);
     }
@@ -31,7 +31,7 @@ public class ServiceInit {
         try {
             return (T) (service = c.newInstance());
         } catch (IllegalAccessException|InstantiationException ex) {
-            throw ExceptionHandler.exception(
+            throw exception(
                 "Can't instantiate class %s, Service class should have empty constructor",
                     c.getSimpleName()); }
     }

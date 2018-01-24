@@ -30,7 +30,6 @@ public class RestMethod<T> {
     }
 
     public void addHeader(String name, String value) {
-
         given.header(name, value);
     }
     public void addHeader(Header header) {

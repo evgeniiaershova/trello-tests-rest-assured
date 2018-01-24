@@ -6,11 +6,11 @@ import io.restassured.specification.ResponseSpecification;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import static client.TrelloClient.*;
 import static http.refactored.entities.ServiceInit.init;
 import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static client.TrelloClient.*;
 
 
 public class TrelloTests {
@@ -126,7 +126,6 @@ public class TrelloTests {
               .body("id", equalTo(CARD_UNIQUE_ID))
               .body("keySet().size()", is(3));
    }
-
 }
 
 
